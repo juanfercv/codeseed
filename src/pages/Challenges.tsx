@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FaSkull, FaStar, FaRocket } from "react-icons/fa";
 
 interface Challenge {
   id: number;
@@ -11,75 +12,45 @@ export default function Challenges() {
   const [completed, setCompleted] = useState<number[]>([]);
 
   const challenges: Challenge[] = [
-    {
-      id: 1,
-      title: "Imprimir tu nombre",
-      description: "Escribe un programa que muestre tu nombre en consola.",
-      difficulty: "Fácil",
-    },
-    {
-      id: 2,
-      title: "Números Pares",
-      description: "Crea un programa que muestre los números pares del 1 al 50.",
-      difficulty: "Fácil",
-    },
-    {
-      id: 3,
-      title: "Suma de Arreglo",
-      description: "Dado un arreglo de números, calcula la suma total.",
-      difficulty: "Medio",
-    },
-    {
-      id: 4,
-      title: "Palíndromo",
-      description: "Determina si una palabra es un palíndromo o no.",
-      difficulty: "Medio",
-    },
-    {
-      id: 5,
-      title: "Juego de Adivinanza",
-      description: "Crea un juego que adivine un número secreto entre 1 y 100.",
-      difficulty: "Difícil",
-    },
+    { id: 1, title: "Hola Mundo", description: "Imprime un mensaje en la consola.", difficulty: "Fácil" },
+    { id: 2, title: "Números Pares", description: "Muestra los números pares del 1 al 50.", difficulty: "Fácil" },
+    { id: 3, title: "Sumatoria", description: "Calcula la suma de los elementos de un arreglo.", difficulty: "Medio" },
+    { id: 4, title: "Palíndromo", description: "Verifica si una palabra se lee igual al revés.", difficulty: "Medio" },
+    { id: 5, title: "Código Infernal", description: "Descifra una cadena secreta usando bucles.", difficulty: "Difícil" },
   ];
 
-  const handleComplete = (id: number) => {
-    if (!completed.includes(id)) {
-      setCompleted([...completed, id]);
-      alert(`¡Completaste el reto #${id}! 🎉`);
-    }
+  const toggleComplete = (id: number) => {
+    if (!completed.includes(id)) setCompleted([...completed, id]);
   };
 
   return (
-    <div className="challenges-container">
-      <h1>Retos de Programación</h1>
-      <p className="challenges-subtitle">
-        Pon a prueba tus conocimientos completando los retos de CodeSeed.
+    <div className="container text-center my-5 fade-in">
+      <h1 className="fw-bold mb-3" style={{ color: "#3f51b5" }}>
+        🌱 Retos de CodeSeed
+      </h1>
+      <p className="text-muted mb-5">
+        Avanza nivel por nivel completando los retos y gana experiencia.
       </p>
 
-      <div className="challenges-grid">
-        {challenges.map((challenge) => (
+      <div className="d-flex flex-wrap justify-content-center align-items-center gap-4 challenge-path">
+        {challenges.map((ch, index) => (
           <div
-            key={challenge.id}
-            className={`challenge-card ${
-              completed.includes(challenge.id) ? "completed" : ""
+            key={ch.id}
+            className={`challenge-node card-animated ${ch.difficulty.toLowerCase()} ${
+              completed.includes(ch.id) ? "completed" : ""
             }`}
+            onClick={() => toggleComplete(ch.id)}
           >
-            <div className="challenge-header">
-              <h3>{challenge.title}</h3>
-              <span className={`tag ${challenge.difficulty.toLowerCase()}`}>
-                {challenge.difficulty}
-              </span>
-            </div>
-            <p>{challenge.description}</p>
-
-            <button
-              className="btn"
-              onClick={() => handleComplete(challenge.id)}
-              disabled={completed.includes(challenge.id)}
-            >
-              {completed.includes(challenge.id) ? "Completado ✅" : "Intentar reto"}
-            </button>
+            {ch.difficulty === "Difícil" ? (
+              <FaSkull className="icon" />
+            ) : ch.difficulty === "Medio" ? (
+              <FaRocket className="icon" />
+            ) : (
+              <FaStar className="icon" />
+            )}
+            <h5 className="mt-2 mb-1">{ch.title}</h5>
+            <small>{ch.description}</small>
+            <span className="level-number">#{index + 1}</span>
           </div>
         ))}
       </div>

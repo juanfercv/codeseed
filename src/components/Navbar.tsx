@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { FaLeaf, FaBars } from "react-icons/fa";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -11,40 +12,61 @@ export default function Navbar() {
   };
 
   return (
-    <header className="navbar">
-      <div className="nav-logo" onClick={() => navigate("/app/lessons")}>
-        <h2>🌱 CodeSeed</h2>
-      </div>
-
-      <nav className={`nav-links ${menuOpen ? "open" : ""}`}>
-        <Link to="/app/lessons" onClick={() => setMenuOpen(false)}>
-          Lecciones
-        </Link>
-        <Link to="/app/challenges" onClick={() => setMenuOpen(false)}>
-          Retos
-        </Link>
-        <Link to="/app/progress" onClick={() => setMenuOpen(false)}>
-          Progreso
-        </Link>
-        <button className="btn-logout-mobile" onClick={handleLogout}>
-          Salir
-        </button>
-      </nav>
-
-      <div className="nav-right">
-        <button className="btn-logout" onClick={handleLogout}>
-          Salir
-        </button>
-
+    <nav className="navbar navbar-expand-lg navbar-dark bg-primary px-3">
+      <div className="container-fluid">
+        {/* Logo */}
         <div
-          className={`menu-toggle ${menuOpen ? "active" : ""}`}
+          className="navbar-brand d-flex align-items-center gap-2"
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate("/app/lessons")}
+        >
+          <FaLeaf color="lightgreen" size={22} />
+          <span className="fw-bold fs-5">CodeSeed</span>
+        </div>
+
+        {/* Botón Hamburguesa */}
+        <button
+          className="navbar-toggler"
+          type="button"
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          <span></span>
-          <span></span>
-          <span></span>
+          <FaBars />
+        </button>
+
+        {/* Enlaces */}
+        <div
+          className={`collapse navbar-collapse ${menuOpen ? "show" : ""}`}
+          id="navbarNav"
+        >
+          <ul className="navbar-nav ms-auto mb-2 mb-lg-0 d-flex align-items-center gap-3">
+            <li className="nav-item">
+              <Link className="nav-link" to="/app/lessons">
+                Lecciones
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/app/challenges">
+                Retos
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/app/progress">
+                Progreso
+              </Link>
+            </li>
+
+            {/* ÚNICO botón de Salir */}
+            <li className="nav-item">
+              <button
+                onClick={handleLogout}
+                className="btn btn-danger btn-sm ms-lg-3"
+              >
+                Salir
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
-    </header>
+    </nav>
   );
 }
