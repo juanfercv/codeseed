@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CardLesson from "../components/CardLesson";
 import { supabase } from "../services/supabaseClient";
 import { FaRocket, FaBrain, FaLaptopCode } from "react-icons/fa";
 

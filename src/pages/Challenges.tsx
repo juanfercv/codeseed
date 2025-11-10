@@ -13,7 +13,7 @@ interface Challenge {
 
 export default function Challenges() {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
-  const [completed, setCompleted] = useState<string[]>([]);
+  const [completed] = useState<string[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
