@@ -5,7 +5,7 @@ import Lessons from "../pages/Lessons";
 import LessonDetail from "../pages/LessonDetail";
 import Challenges from "../pages/Challenges";
 import ChallengeEditor from "../pages/ChallengeEditor"; // ✅ nuevo editor
-import ProgressTree from "../pages/ProgressTree";
+import ProgressTree from "../pages/Perfil";
 import MainLayout from "../layouts/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
 

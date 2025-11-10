@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../services/supabaseClient";
+import logo from "../assets/logoimagen.png";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -36,51 +37,55 @@ export default function Register() {
   };
 
   return (
-    <div className="register-container">
-      <h1>CodeSeed</h1>
-      <h2>Crear cuenta</h2>
+    <div className="auth-page">
+      <div className="auth-card card-animated fade-in">
+        <img src={logo} alt="CodeSeed" className="auth-logo" />
+        <h2 className="auth-title">Crear cuenta</h2>
 
-      <form onSubmit={handleSubmit} className="register-form">
-        <input
-          type="text"
-          placeholder="Nombre completo"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
+        <form onSubmit={handleSubmit} className="register-form">
+          <input
+            type="text"
+            placeholder="Nombre completo"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
 
-        <input
-          type="email"
-          placeholder="Correo electrónico"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+          <input
+            type="email"
+            placeholder="Correo electrónico"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
 
-        <input
-          type="password"
-          placeholder="Confirmar contraseña"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-        />
+          <input
+            type="password"
+            placeholder="Confirmar contraseña"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
 
-        {error && <p className="error">{error}</p>}
+          {error && <p className="error">{error}</p>}
 
-        <button type="submit">Registrarme</button>
-      </form>
+          <button type="submit" className="auth-btn">
+            Registrarme
+          </button>
+        </form>
 
-      <p className="login-text">
-        ¿Ya tienes una cuenta? <Link to="/">Inicia sesión</Link>
-      </p>
+        <p className="login-text">
+          ¿Ya tienes una cuenta? <Link to="/">Inicia sesión</Link>
+        </p>
+      </div>
     </div>
   );
 }

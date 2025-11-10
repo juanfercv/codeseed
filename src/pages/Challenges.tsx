@@ -30,10 +30,17 @@ export default function Challenges() {
 
   return (
     <div className="container text-center my-5 fade-in">
-      <h1 className="fw-bold mb-3" style={{ color: "#3f51b5" }}>
-        🌱 Retos de CodeSeed
+      <h1 className="fw-bold mb-3" style={{ color: "#e8e2e2ff" }}>
+        Retos de CodeSeed
       </h1>
-      <p className="text-muted mb-5">
+      <p
+        className="mb-5"
+        style={{
+          color: "#e3f2fd", // azul claro suave
+          textShadow: "0 0 10px rgba(130,177,255,0.4)", // leve brillo
+          fontSize: "1em",
+        }}
+      >
         Avanza nivel por nivel completando los retos y gana experiencia.
       </p>
 

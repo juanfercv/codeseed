@@ -4,7 +4,7 @@ export default function Footer() {
     <footer className="footer">
       <p>
         © {new Date().getFullYear()} CodeSeed — Desarrollado por{" "}
-        <strong>Mateous Castillo</strong>
+        <strong>Mateous Castillo y Fernando Cuaspud</strong>
       </p>
     </footer>
   );
