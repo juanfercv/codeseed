@@ -1,20 +1,20 @@
-import React from "react";
+import { Link } from "react-router-dom";
 
-interface CardLessonProps {
+type CardLessonProps = {
+  id: string;
   title: string;
   summary: string;
-}
+};
 
-export default function CardLesson({ title, summary }: CardLessonProps) {
-  const handleClick = () => {
-    alert(`Abrir lección: ${title}`);
-  };
-
+export default function CardLesson({ id, title, summary }: CardLessonProps) {
   return (
-    <div className="lesson-card" onClick={handleClick}>
+    <div className="card lesson-card">
       <h3>{title}</h3>
       <p>{summary}</p>
-      <button className="btn">Ver lección</button>
+
+      <Link to={`/app/lesson/${id}`} className="btn-primary">
+        Ver Lección
+      </Link>
     </div>
   );
 }

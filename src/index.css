@@ -166,38 +166,41 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 50px;
+  gap: 60px;
   position: relative;
+  padding: 20px;
 }
 
 .challenge-node {
   position: relative;
-  width: 150px;
-  height: 150px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+  width: 220px; /* antes 150px */
+  height: 220px; /* antes 150px */
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   color: #fff;
   overflow: hidden;
+  padding: 16px;
+  text-align: center;
 }
 
 .challenge-node:hover {
-  transform: translateY(-8px) scale(1.05);
-  box-shadow: 0 10px 30px rgba(63, 81, 181, 0.4);
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 12px 30px rgba(63, 81, 181, 0.4);
 }
 
 .challenge-node::after {
   content: "";
   position: absolute;
   top: 0;
-  left: -75px;
-  width: 50px;
+  left: -100px;
+  width: 80px;
   height: 100%;
   background: linear-gradient(120deg, rgba(255, 255, 255, 0.3), transparent);
   transform: skewX(-25deg);
@@ -208,6 +211,7 @@ body {
   left: 130%;
 }
 
+/* === Colores según dificultad === */
 .challenge-node.fácil .icon {
   color: #4caf50;
 }
@@ -220,29 +224,58 @@ body {
   color: #ef5350;
 }
 
+/* === Completados === */
 .challenge-node.completed {
-  background: rgba(76, 175, 80, 0.2);
-  border: 1px solid #4caf50;
+  background: rgba(76, 175, 80, 0.25);
+  border: 2px solid #4caf50;
   transform: scale(1.02);
 }
 
+/* === Texto dentro del cuadro === */
 .challenge-node h5 {
-  margin-top: 10px;
+  margin: 10px 0 6px;
   font-weight: 700;
+  font-size: 1.1em;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal; /* permite saltos de línea */
+  word-wrap: break-word;
 }
 
+.challenge-node p {
+  font-size: 0.9em;
+  color: #ddd;
+  margin: 0;
+  max-height: 80px;
+  overflow-y: auto; /* si el texto es largo, agrega scroll interno */
+  padding: 0 6px;
+  scrollbar-width: thin;
+}
+
+/* Scroll más estético */
+.challenge-node p::-webkit-scrollbar {
+  width: 6px;
+}
+.challenge-node p::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+/* Nivel / número */
 .level-number {
   position: absolute;
-  bottom: 8px;
+  bottom: 10px;
   right: 12px;
-  font-size: 0.8em;
+  font-size: 0.9em;
   background: #3f51b5;
   color: white;
-  padding: 4px 8px;
+  padding: 6px 10px;
   border-radius: 12px;
+  font-weight: 600;
 }
 
-/* === ANIMACIONES === */
+/* === Animaciones === */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -258,14 +291,14 @@ body {
   animation: fadeInUp 0.8s ease-in-out;
 }
 
-/* Efecto general de brillo */
+/* Efecto general */
 .card-animated {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card-animated:hover {
-  transform: translateY(-6px) scale(1.03);
-  box-shadow: 0 8px 16px rgba(63, 81, 181, 0.3);
+  transform: translateY(-6px) scale(1.04);
+  box-shadow: 0 10px 20px rgba(63, 81, 181, 0.3);
 }
 
 /* === FOOTER === */
@@ -369,5 +402,100 @@ body {
     transform: translateY(0);
     opacity: 1;
   }
+}
+
+/* === QUESTION CARD === */
+.question-container {
+  position: relative;
+  margin: 2rem auto;
+  width: 90%;
+  max-width: 700px;
+}
+
+.question-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 2rem;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  animation: fadeInUp 0.6s ease;
+}
+
+.question-text {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  color: #b3e5fc;
+  font-weight: 600;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.option-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  padding: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  font-weight: 500;
+}
+
+.option-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.02);
+}
+
+.option-btn.correct {
+  background: rgba(76, 175, 80, 0.3);
+  border: 1px solid #4caf50;
+  color: #a5d6a7;
+}
+
+.option-btn.wrong {
+  background: rgba(244, 67, 54, 0.25);
+  border: 1px solid #ef5350;
+  color: #ef9a9a;
+}
+
+/* === FEEDBACK MESSAGE === */
+.feedback-message {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  animation: fadeInUp 0.4s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.feedback-message.correct {
+  background: rgba(76, 175, 80, 0.8);
+  color: #e8f5e9;
+}
+
+.feedback-message.wrong {
+  background: rgba(244, 67, 54, 0.8);
+  color: #ffebee;
+}
+
+/* Opción seleccionada antes de verificar */
+.option-btn.selected {
+  background: rgba(129, 212, 250, 0.25);
+  border: 1px solid #82b1ff;
+  box-shadow: 0 0 10px rgba(130, 177, 255, 0.4);
+  color: #bbdefb;
+  transform: scale(1.03);
 }
 

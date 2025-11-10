@@ -1,26 +1,31 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaSkull, FaStar, FaRocket } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../services/supabaseClient"; // Asegúrate de tenerlo configurado
 
 interface Challenge {
-  id: number;
+  id: string;
   title: string;
   description: string;
   difficulty: "Fácil" | "Medio" | "Difícil";
+  points: number;
 }
 
 export default function Challenges() {
-  const [completed, setCompleted] = useState<number[]>([]);
+  const [challenges, setChallenges] = useState<Challenge[]>([]);
+  const [completed, setCompleted] = useState<string[]>([]);
+  const navigate = useNavigate();
 
-  const challenges: Challenge[] = [
-    { id: 1, title: "Hola Mundo", description: "Imprime un mensaje en la consola.", difficulty: "Fácil" },
-    { id: 2, title: "Números Pares", description: "Muestra los números pares del 1 al 50.", difficulty: "Fácil" },
-    { id: 3, title: "Sumatoria", description: "Calcula la suma de los elementos de un arreglo.", difficulty: "Medio" },
-    { id: 4, title: "Palíndromo", description: "Verifica si una palabra se lee igual al revés.", difficulty: "Medio" },
-    { id: 5, title: "Código Infernal", description: "Descifra una cadena secreta usando bucles.", difficulty: "Difícil" },
-  ];
+  useEffect(() => {
+    const fetchChallenges = async () => {
+      const { data, error } = await supabase.from("challenges").select("*");
+      if (!error && data) setChallenges(data as Challenge[]);
+    };
+    fetchChallenges();
+  }, []);
 
-  const toggleComplete = (id: number) => {
-    if (!completed.includes(id)) setCompleted([...completed, id]);
+  const handleSelectChallenge = (id: string) => {
+    navigate(`/app/challenges/${id}`); // Redirige al editor
   };
 
   return (
@@ -39,7 +44,7 @@ export default function Challenges() {
             className={`challenge-node card-animated ${ch.difficulty.toLowerCase()} ${
               completed.includes(ch.id) ? "completed" : ""
             }`}
-            onClick={() => toggleComplete(ch.id)}
+            onClick={() => handleSelectChallenge(ch.id)}
           >
             {ch.difficulty === "Difícil" ? (
               <FaSkull className="icon" />

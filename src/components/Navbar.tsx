@@ -1,14 +1,38 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaLeaf, FaBars } from "react-icons/fa";
+import { supabase } from "../services/supabaseClient"; // Asegúrate de que esta importación sea correcta
 
 export default function Navbar() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const handleLogout = () => {
-    const confirmLogout = window.confirm("¿Deseas cerrar sesión?");
-    if (confirmLogout) navigate("/");
+  /**
+   * Maneja el cierre de sesión:
+   * 1. Llama a supabase.auth.signOut() para invalidar la sesión.
+   * 2. Redirige al usuario a la página de inicio/login.
+   */
+  const handleLogout = async () => {
+    // IMPORTANTE: Hemos quitado window.confirm().
+    // En una aplicación real, usa un modal o alerta personalizado para confirmar.
+    
+    try {
+      // 1. Cerrar sesión en Supabase
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+        console.error("Error al cerrar sesión:", error.message);
+        // Aquí podrías mostrar un mensaje de error al usuario
+        return;
+      }
+
+      // 2. Redirigir al inicio (Login) y reemplazar la entrada del historial.
+      // Cuando el usuario haga clic en 'Salir' y sea redirigido a '/',
+      // esta acción NO guardará la página anterior (/app/...) en el historial.
+      navigate("/", { replace: true });
+
+    } catch (e) {
+      console.error("Fallo durante el cierre de sesión:", e);
+    }
   };
 
   return (
@@ -20,7 +44,7 @@ export default function Navbar() {
           style={{ cursor: "pointer" }}
           onClick={() => navigate("/app/lessons")}
         >
-          <FaLeaf color="lightgreen" size={22} />
+          
           <span className="fw-bold fs-5">CodeSeed</span>
         </div>
 
@@ -30,7 +54,7 @@ export default function Navbar() {
           type="button"
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          <FaBars />
+          
         </button>
 
         {/* Enlaces */}
@@ -55,7 +79,7 @@ export default function Navbar() {
               </Link>
             </li>
 
-            {/* ÚNICO botón de Salir */}
+            {/* Botón de Salir */}
             <li className="nav-item">
               <button
                 onClick={handleLogout}

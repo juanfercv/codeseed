@@ -1,21 +1,33 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { supabase } from "../services/supabaseClient";
 
 export default function Login() {
   const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Simulación de login (sin base de datos)
-    if (email === "admin@code.com" && password === "123456") {
-      navigate("/app/lessons"); // Redirige al área interna (crearemos luego)
+    // Guardamos la respuesta completa
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setError(error.message);
+      return;
+    }
+
+    // data.session contiene el access_token y refreshtoken
+    if (data.session) {
+      // Sesión activa, redirigimos al área interna
+      navigate("/app/lessons");
     } else {
-      setError("Correo o contraseña incorrectos");
+      setError("No se pudo iniciar sesión");
     }
   };
 

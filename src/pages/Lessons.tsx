@@ -1,25 +1,44 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import CardLesson from "../components/CardLesson";
+import { supabase } from "../services/supabaseClient";
+
+type Lesson = {
+  id: string;
+  title: string;
+  summary: string;
+  // si tienes más columnas, agrégalas:
+  // content?: string;
+};
 
 export default function Lessons() {
-  const lessons = [
-    { id: 1, title: "Introducción a la Programación", summary: "Aprende los conceptos básicos: variables, tipos y operadores." },
-    { id: 2, title: "Estructuras de Control", summary: "Descubre cómo usar condicionales y bucles para controlar el flujo." },
-    { id: 3, title: "Funciones", summary: "Organiza tu código en bloques reutilizables llamados funciones." },
-    { id: 4, title: "Arreglos y Objetos", summary: "Manipula múltiples datos con arreglos y objetos." },
-  ];
+  const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchLessons = async () => {
+      const { data, error } = await supabase.from("lessons").select("*");
+
+      if (error) {
+        console.error("Error fetching lessons:", error);
+      }
+
+      setLessons(data || []);
+      setLoading(false);
+    };
+
+    fetchLessons();
+  }, []);
+
+  if (loading) return <p>Cargando...</p>;
 
   return (
     <div className="lessons-container fade-in">
-      <h1 className="fw-bold text-primary mb-3">📘 Lecciones de CodeSeed</h1>
-      <p className="lessons-subtitle mb-4">
-        Explora los fundamentos de la programación con lecciones interactivas.
-      </p>
+      <h1 className="fw-bold text-primary mb-3">📘 Lecciones</h1>
 
       <div className="lessons-grid">
         {lessons.map((lesson) => (
           <div key={lesson.id} className="card-animated">
-            <CardLesson title={lesson.title} summary={lesson.summary} />
+            <CardLesson id={lesson.id} title={lesson.title} summary={lesson.summary} />
           </div>
         ))}
       </div>

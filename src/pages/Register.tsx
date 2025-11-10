@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "../services/supabaseClient";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -18,13 +19,19 @@ export default function Register() {
       return;
     }
 
-    if (!email.includes("@")) {
-      setError("Correo inválido");
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { name } // <-- Guarda el nombre del usuario
+      }
+    });
+
+    if (error) {
+      setError(error.message);
       return;
     }
 
-    // Simulación de registro exitoso
-    console.log("Usuario registrado:", { name, email });
     navigate("/app/lessons");
   };
 
