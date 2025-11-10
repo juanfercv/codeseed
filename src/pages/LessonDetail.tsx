@@ -161,6 +161,9 @@ export default function LessonDetail() {
                     )}
                 </>
             )}
+            <a href="/app/lessons" className="btn-back-lessons">
+            ← Volver a Lecciones
+            </a>
         </div>
     );
 }
