@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../services/supabaseClient";
 import logo from "../assets/logoimagen.png"; // Asegúrate de que esté en /src/assets/
@@ -104,7 +104,7 @@ export default function Navbar() {
                 style={{ color: "#e3f2fd" }}
                 to="/app/progress"
               >
-                Progreso
+                Perfil
               </Link>
             </li>
 
