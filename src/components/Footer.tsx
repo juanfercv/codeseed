@@ -1,0 +1,11 @@
+
+export default function Footer() {
+  return (
+    <footer className="footer">
+      <p>
+        © {new Date().getFullYear()} CodeSeed — Desarrollado por{" "}
+        <strong>Mateous Castillo</strong>
+      </p>
+    </footer>
+  );
+}
