@@ -68,7 +68,7 @@ export default function LessonDetail() {
         
         setSavingProgress(true);
         try {
-            // Obtener el usuario actual
+
             const { data: { user } } = await supabase.auth.getUser();
             
             if (!user) {
@@ -76,7 +76,7 @@ export default function LessonDetail() {
                 return;
             }
 
-            // Verificar si ya existe un registro de progreso
+        
             const { data: existingProgress } = await supabase
                 .from("user_lesson_progress")
                 .select("id")
@@ -85,7 +85,7 @@ export default function LessonDetail() {
                 .single();
 
             if (existingProgress) {
-                // Actualizar registro existente
+            
                 const { error } = await supabase
                     .from("user_lesson_progress")
                     .update({
@@ -97,7 +97,7 @@ export default function LessonDetail() {
 
                 if (error) throw error;
             } else {
-                // Crear nuevo registro
+            
                 const { error } = await supabase
                     .from("user_lesson_progress")
                     .insert({
@@ -119,7 +119,7 @@ export default function LessonDetail() {
         }
     };
 
-    // ⭐ Nueva función para recibir el puntaje del componente Quiz
+
     const handleQuizComplete = async (score: number) => {
         setFinalScore(score);
         await saveUserProgress(score);

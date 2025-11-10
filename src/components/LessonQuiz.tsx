@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom"; // ⭐ Importar useNavigate
+import { useNavigate } from "react-router-dom";
 
 interface Question {
     id: string;
@@ -17,23 +17,20 @@ interface QuizProps {
 }
 
 export default function Quiz({ questions, onQuizComplete }: QuizProps) {
-    const navigate = useNavigate(); // ⭐ Inicializar useNavigate
+    const navigate = useNavigate(); 
     const [answers, setAnswers] = useState<{ [id: string]: string }>({});
     const [showResults, setShowResults] = useState(false);
     const [score, setScore] = useState<number | null>(null);
 
-    // ⭐ Lógica de verificación: Se calcula si todas las preguntas han sido respondidas
     const allAnswered = useMemo(() => {
         return Object.keys(answers).length === questions.length;
     }, [answers, questions.length]);
 
-    // Maneja la selección de una opción
     const handleSelect = (questionId: string, option: string) => {
         if (showResults) return;
         setAnswers({ ...answers, [questionId]: option });
     };
 
-    // Función que se ejecuta al hacer clic en el botón "Verificar"
     const handleVerify = () => {
         if (!allAnswered) return; 
         
