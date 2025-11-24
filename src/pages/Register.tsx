@@ -132,7 +132,7 @@ export default function Register() {
         return;
       }
 
-      navigate("/app/lessons");
+      navigate("/app/login");
     } catch (err) {
       setError("Error inesperado al crear la cuenta");
     }
