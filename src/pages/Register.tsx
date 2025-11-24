@@ -131,8 +131,8 @@ export default function Register() {
         setError(signUpError.message);
         return;
       }
-
-      navigate("/app/lessons");
+//ruta
+      navigate("/app/login");
     } catch (err) {
       setError("Error inesperado al crear la cuenta");
     }
