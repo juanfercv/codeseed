@@ -44,7 +44,7 @@ export default function AppRouter() {
         </Route>
 
         {/* 🚫 Cualquier otra ruta → login */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
   );
