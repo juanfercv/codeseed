@@ -1,73 +1,105 @@
-# React + TypeScript + Vite
+# CODESEED
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
 
-Currently, two official plugins are available:
+## Instalacion 
+npm install **o** npm i
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Correr con 
+npm run dev
 
-## React Compiler
+## 1. **Variables y Tipos**
+```javascript
+let nombre = "Juan";
+let edad = 25;
+console.log(nombre, edad);
+```
+**Salida esperada:** `Juan 25`
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 2. **Operadores Aritméticos**
+```javascript
+let base = 8;
+let altura = 5;
+let area = base * altura;
+console.log(area);
+```
+**Salida esperada:** `40`
 
-## Expanding the ESLint configuration
+## 3. **Comparación de Valores**
+```javascript
+let a = 15;
+let b = 10;
+let resultado = a > b;
+console.log(resultado);
+```
+**Salida esperada:** `true`
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 4. **Función Básica**
+```javascript
+function saludar() {
+    console.log("¡Hola!");
+}
+saludar();
+```
+**Salida esperada:** `¡Hola!`
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 5. **Función con Parámetros**
+```javascript
+function multiplicar(a, b) {
+    let resultado = a * b;
+    console.log(resultado);
+}
+multiplicar(5, 3);
+```
+**Salida esperada:** `15`
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 6. **Función con Return**
+```javascript
+function cuadrado(num) {
+    return num * num;
+}
+console.log(cuadrado(4));
+```
+**Salida esperada:** `16`
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 7. **Condicional If**
+```javascript
+let nota = 7;
+if (nota >= 6) {
+    console.log("Aprobado");
+}
+```
+**Salida esperada:** `Aprobado`
+
+## 8. **Bucle For**
+```javascript
+for (let i = 1; i <= 5; i++) {
+    console.log(i);
+}
+```
+**Salida esperada:**
+```
+1
+2
+3
+4
+5
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 9. **Array Básico**
+```javascript
+let numeros = [1, 2, 3];
+console.log(numeros.length);
 ```
+**Salida esperada:** `3`
+
+## 10. **Método Map**
+```javascript
+let arr = [1, 2, 3];
+let duplicado = arr.map(function(num) {
+    return num * 2;
+});
+console.log(duplicado);
+```
+**Salida esperada:** `[2,4,6]`
+

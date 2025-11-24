@@ -3,10 +3,15 @@ import { supabase } from "../services/supabaseClient";
 import React from "react";
 
 // --- 🧠 INTERFACES ---
-
 interface Challenge {
   title: string;
   difficulty: string;
+  points: number;
+}
+
+interface Lesson {
+  title: string;
+  summary: string;
   points: number;
 }
 
@@ -14,15 +19,24 @@ interface UserChallengeProgressResponse {
   completed: boolean;
   score: number;
   completed_at: string;
-  challenges: Challenge[];
+  challenge: Challenge;
+}
+
+interface UserLessonProgressResponse {
+  completed: boolean;
+  score: number;
+  completed_at: string;
+  lesson: Lesson;
 }
 
 interface ProgressDetail {
   title: string;
-  difficulty: string;
+  type: "challenge" | "lesson";
+  difficulty?: string;
   points: number;
   score: number;
   completedAt: string;
+  summary?: string;
 }
 
 interface ProfileData {
@@ -31,6 +45,7 @@ interface ProfileData {
   email: string;
   totalChallengesAttempted: number;
   completedChallenges: number;
+  completedLessons: number;
   totalPoints: number;
   progressDetail: ProgressDetail[];
 }
@@ -43,6 +58,7 @@ const ProfileView = () => {
     email: "",
     totalChallengesAttempted: 0,
     completedChallenges: 0,
+    completedLessons: 0,
     totalPoints: 0,
     progressDetail: [],
   });
@@ -64,13 +80,14 @@ const ProfileView = () => {
         return;
       }
 
-      const { data: progressData, error: progressError } = await supabase
+      // 🔹 Obtener progreso de CHALLENGES
+      const { data: challengeProgressData, error: challengeError } = await supabase
         .from("user_challenge_progress")
         .select(`
           completed,
           score,
           completed_at,
-          challenges (
+          challenge:challenge_id (
             title,
             difficulty,
             points
@@ -78,41 +95,83 @@ const ProfileView = () => {
         `)
         .eq("user_id", user.id);
 
-      if (progressError) {
-        console.error("Error obteniendo progreso:", progressError);
+      if (challengeError) {
+        console.error("Error obteniendo progreso de challenges:", challengeError);
       }
 
-      const safeProgressData =
-        (progressData as UserChallengeProgressResponse[] | null) || [];
+      // 🔹 Obtener progreso de LECCIONES
+      const { data: lessonProgressData, error: lessonError } = await supabase
+        .from("user_lesson_progress")
+        .select(`
+          completed,
+          score,
+          completed_at,
+          lesson:lesson_id (
+            title,
+            summary,
+            points
+          )
+        `)
+        .eq("user_id", user.id);
 
-      const completedChallenges = safeProgressData.filter(
+      if (lessonError) {
+        console.error("Error obteniendo progreso de lecciones:", lessonError);
+      }
+
+      const safeChallengeData = (challengeProgressData as UserChallengeProgressResponse[] | null) || [];
+      const safeLessonData = (lessonProgressData as UserLessonProgressResponse[] | null) || [];
+
+      // 🔹 Filtrar challenges completados
+      const completedChallenges = safeChallengeData.filter(
         (progress) => progress && progress.completed === true
       );
 
-      const totalPoints = completedChallenges.reduce((sum, progress) => {
-        return sum + (Number(progress.score) || 0);
-      }, 0);
+      // 🔹 Filtrar lecciones completadas
+      const completedLessons = safeLessonData.filter(
+        (progress) => progress && progress.completed === true
+      );
 
-      const progressDetail: ProgressDetail[] = completedChallenges.map(
-        (progress) => {
-          const challenge = progress.challenges?.[0] || ({} as Challenge);
+      // 🔹 Calcular puntos totales (challenges + lecciones)
+      const totalPoints = 
+        completedChallenges.reduce((sum, progress) => sum + (Number(progress.score) || 0), 0) +
+        completedLessons.reduce((sum, progress) => sum + (Number(progress.score) || 0), 0);
 
+      // 🔹 Combinar progreso de challenges y lecciones
+      const progressDetail: ProgressDetail[] = [
+        ...completedChallenges.map((progress) => {
+          const challenge = progress.challenge || ({} as Challenge);
           return {
             title: challenge.title || "Challenge sin título",
+            type: "challenge" as const,
             difficulty: challenge.difficulty || "Desconocida",
             points: Number(challenge.points) || 0,
             score: Number(progress.score) || 0,
             completedAt: progress.completed_at || new Date().toISOString(),
           };
-        }
-      );
+        }),
+        ...completedLessons.map((progress) => {
+          const lesson = progress.lesson || ({} as Lesson);
+          return {
+            title: lesson.title || "Lección sin título",
+            type: "lesson" as const,
+            points: Number(lesson.points) || 0,
+            score: Number(progress.score) || 0,
+            completedAt: progress.completed_at || new Date().toISOString(),
+            summary: lesson.summary || "",
+          };
+        })
+      ];
+
+      // 🔹 Ordenar por fecha de completado (más reciente primero)
+      progressDetail.sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime());
 
       setProfile({
         name: user.user_metadata?.name || user.email || "Usuario",
         avatar: user.user_metadata?.avatar_url || "/default-avatar.png",
         email: user.email || "",
-        totalChallengesAttempted: safeProgressData.length,
+        totalChallengesAttempted: safeChallengeData.length,
         completedChallenges: completedChallenges.length,
+        completedLessons: completedLessons.length,
         totalPoints: totalPoints,
         progressDetail: progressDetail,
       });
@@ -231,11 +290,11 @@ const ProfileView = () => {
             </div>
             <div className="stat">
               <span className="stat-value">{profile.completedChallenges}</span>
-              <span className="stat-label">Completados</span>
+              <span className="stat-label">Challenges</span>
             </div>
             <div className="stat">
-              <span className="stat-value">{profile.totalChallengesAttempted}</span>
-              <span className="stat-label">Intentados</span>
+              <span className="stat-value">{profile.completedLessons}</span>
+              <span className="stat-label">Lecciones</span>
             </div>
           </div>
         </div>
@@ -249,43 +308,42 @@ const ProfileView = () => {
           <div
             className="progress-fill"
             style={{
-              width: `${
-                profile.totalChallengesAttempted > 0
-                  ? (profile.completedChallenges / profile.totalChallengesAttempted) * 100
-                  : 0
-              }%`,
+              width: `${profile.totalChallengesAttempted > 0
+                ? (profile.completedChallenges / profile.totalChallengesAttempted) * 100
+                : 0
+                }%`,
             }}
           ></div>
         </div>
 
         <p>
-          {profile.completedChallenges} de {profile.totalChallengesAttempted} completados
+          {profile.completedChallenges} de {profile.totalChallengesAttempted} challenges completados
         </p>
 
         <div className="challenges-list">
-          <h3>Challenges Completados</h3>
+          <h3>Actividades Completadas</h3>
           {profile.progressDetail.length > 0 ? (
-            profile.progressDetail.map((challenge, index) => (
+            profile.progressDetail.map((activity, index) => (
               <div key={index} className="challenge-item">
                 <div className="challenge-info">
-                  <h4>{challenge.title}</h4>
+                  <h4>{activity.title}</h4>
                   <span
-                    className={`difficulty ${challenge.difficulty.toLowerCase()}`}
+                    className={`difficulty ${activity.difficulty ? activity.difficulty.toLowerCase() : 'lesson'}`}
                   >
-                    {challenge.difficulty}
+                    {activity.type === 'challenge' ? activity.difficulty : 'Lección'}
                   </span>
                 </div>
                 <div className="challenge-stats">
-                  <span>Puntos: {challenge.score}</span>
+                  <span>Puntos: {activity.score}</span>
                   <span>
                     Completado:{" "}
-                    {new Date(challenge.completedAt).toLocaleDateString()}
+                    {new Date(activity.completedAt).toLocaleDateString()}
                   </span>
                 </div>
               </div>
             ))
           ) : (
-            <p>No hay challenges completados aún.</p>
+            <p>No hay actividades completadas aún.</p>
           )}
         </div>
       </div>
