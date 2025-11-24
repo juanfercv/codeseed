@@ -29,3 +29,19 @@ body {
     background-position: 0% 50%;
   }
 }
+
+/* === PARA QUE EL FOOTER SIEMPRE QUEDE ABAJO === */
+html, body, #root, #root-layout {
+  height: 100%;
+  margin: 0;
+}
+
+#root-layout {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+}
+

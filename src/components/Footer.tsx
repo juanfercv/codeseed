@@ -1,5 +1,4 @@
-
-export default function Footer() {
+function Footer() {
   return (
     <footer className="footer">
       <p>
@@ -9,3 +8,5 @@ export default function Footer() {
     </footer>
   );
 }
+
+export default Footer;
