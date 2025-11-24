@@ -131,7 +131,7 @@ export default function Register() {
         setError(signUpError.message);
         return;
       }
-
+//ruta
       navigate("/app/login");
     } catch (err) {
       setError("Error inesperado al crear la cuenta");
