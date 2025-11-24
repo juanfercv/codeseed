@@ -1,31 +1,42 @@
-// En Perfil.tsx
 import { useState, useEffect } from "react";
 import { supabase } from "../services/supabaseClient";
-import React from "react"; // Necesario para React.SyntheticEvent y React.ChangeEvent
+import React from "react";
 
-// --- 🛠️ INTERFACES CORREGIDAS ---
-
+// --- 🧠 INTERFACES ---
 interface Challenge {
   title: string;
   difficulty: string;
   points: number;
 }
 
-// 🎯 CORRECCIÓN: 'challenges' es tipado como un array,
-// que es como se interpreta un join de Supabase.
+interface Lesson {
+  title: string;
+  summary: string;
+  points: number;
+}
+
 interface UserChallengeProgressResponse {
   completed: boolean;
   score: number;
   completed_at: string;
-  challenges: Challenge[]; // ¡CORREGIDO!
+  challenge: Challenge;
+}
+
+interface UserLessonProgressResponse {
+  completed: boolean;
+  score: number;
+  completed_at: string;
+  lesson: Lesson;
 }
 
 interface ProgressDetail {
   title: string;
-  difficulty: string;
+  type: "challenge" | "lesson";
+  difficulty?: string;
   points: number;
   score: number;
   completedAt: string;
+  summary?: string;
 }
 
 interface ProfileData {
@@ -34,171 +45,204 @@ interface ProfileData {
   email: string;
   totalChallengesAttempted: number;
   completedChallenges: number;
+  completedLessons: number;
   totalPoints: number;
   progressDetail: ProgressDetail[];
 }
 
+// --- 🎯 COMPONENTE PRINCIPAL ---
 const ProfileView = () => {
   const [profile, setProfile] = useState<ProfileData>({
-    name: '',
-    avatar: '',
-    email: '',
+    name: "",
+    avatar: "",
+    email: "",
     totalChallengesAttempted: 0,
     completedChallenges: 0,
+    completedLessons: 0,
     totalPoints: 0,
-    progressDetail: []
+    progressDetail: [],
   });
   const [loading, setLoading] = useState(true);
-  const [uploading, setUploading] = useState(false); // Nuevo estado para la subida del avatar
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     fetchUserProfile();
   }, []);
 
+  // --- 🔍 OBTENER DATOS DEL PERFIL ---
   const fetchUserProfile = async () => {
     try {
-      // 1. Obtener usuario
       const { data: { user }, error: userError } = await supabase.auth.getUser();
 
       if (userError || !user) {
-        console.error('Error obteniendo usuario:', userError);
+        console.error("Error obteniendo usuario:", userError);
         setLoading(false);
         return;
       }
 
-      // 2. Obtener progreso de challenges
-      const { data: progressData, error: progressError } = await supabase
-        .from('user_challenge_progress')
+      // 🔹 Obtener progreso de CHALLENGES
+      const { data: challengeProgressData, error: challengeError } = await supabase
+        .from("user_challenge_progress")
         .select(`
           completed,
           score,
           completed_at,
-          challenges (
+          challenge:challenge_id (
             title,
             difficulty,
             points
           )
         `)
-        .eq('user_id', user.id);
+        .eq("user_id", user.id);
 
-      if (progressError) {
-        console.error('Error obteniendo progreso:', progressError);
+      if (challengeError) {
+        console.error("Error obteniendo progreso de challenges:", challengeError);
       }
 
-      // 3. Procesar datos (con tipado seguro)
-      // Usamos la aserción 'as' con el tipo corregido:
-      const safeProgressData = (progressData as UserChallengeProgressResponse[] | null) || [];
-      
-      // Filtrar challenges completados
-      const completedChallenges = safeProgressData.filter(progress => {
-        return progress && progress.completed === true;
-      });
+      // 🔹 Obtener progreso de LECCIONES
+      const { data: lessonProgressData, error: lessonError } = await supabase
+        .from("user_lesson_progress")
+        .select(`
+          completed,
+          score,
+          completed_at,
+          lesson:lesson_id (
+            title,
+            summary,
+            points
+          )
+        `)
+        .eq("user_id", user.id);
 
-      // Calcular puntos totales
-      const totalPoints = completedChallenges.reduce((sum, progress) => {
-        return sum + (Number(progress.score) || 0);
-      }, 0);
+      if (lessonError) {
+        console.error("Error obteniendo progreso de lecciones:", lessonError);
+      }
 
-      // Mapear detalles del progreso
-      const progressDetail: ProgressDetail[] = completedChallenges.map(progress => {
-        // 🎯 AJUSTE DE LÓGICA: Accedemos al primer elemento del array 'challenges'.
-        const challenge = progress.challenges?.[0] || {} as Challenge;
+      const safeChallengeData = (challengeProgressData as UserChallengeProgressResponse[] | null) || [];
+      const safeLessonData = (lessonProgressData as UserLessonProgressResponse[] | null) || [];
 
-        return {
-          title: challenge.title || 'Challenge sin título',
-          difficulty: challenge.difficulty || 'Desconocida',
-          points: Number(challenge.points) || 0,
-          score: Number(progress.score) || 0,
-          completedAt: progress.completed_at || new Date().toISOString()
-        };
-      });
+      // 🔹 Filtrar challenges completados
+      const completedChallenges = safeChallengeData.filter(
+        (progress) => progress && progress.completed === true
+      );
 
-      // 4. Actualizar estado
+      // 🔹 Filtrar lecciones completadas
+      const completedLessons = safeLessonData.filter(
+        (progress) => progress && progress.completed === true
+      );
+
+      // 🔹 Calcular puntos totales (challenges + lecciones)
+      const totalPoints = 
+        completedChallenges.reduce((sum, progress) => sum + (Number(progress.score) || 0), 0) +
+        completedLessons.reduce((sum, progress) => sum + (Number(progress.score) || 0), 0);
+
+      // 🔹 Combinar progreso de challenges y lecciones
+      const progressDetail: ProgressDetail[] = [
+        ...completedChallenges.map((progress) => {
+          const challenge = progress.challenge || ({} as Challenge);
+          return {
+            title: challenge.title || "Challenge sin título",
+            type: "challenge" as const,
+            difficulty: challenge.difficulty || "Desconocida",
+            points: Number(challenge.points) || 0,
+            score: Number(progress.score) || 0,
+            completedAt: progress.completed_at || new Date().toISOString(),
+          };
+        }),
+        ...completedLessons.map((progress) => {
+          const lesson = progress.lesson || ({} as Lesson);
+          return {
+            title: lesson.title || "Lección sin título",
+            type: "lesson" as const,
+            points: Number(lesson.points) || 0,
+            score: Number(progress.score) || 0,
+            completedAt: progress.completed_at || new Date().toISOString(),
+            summary: lesson.summary || "",
+          };
+        })
+      ];
+
+      // 🔹 Ordenar por fecha de completado (más reciente primero)
+      progressDetail.sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime());
+
       setProfile({
-        name: user.user_metadata?.name || user.email || 'Usuario',
-        // Usar la URL de metadatos para el avatar, o un valor por defecto
-        avatar: user.user_metadata?.avatar_url || '/default-avatar.png', 
-        email: user.email || '',
-        totalChallengesAttempted: safeProgressData.length,
+        name: user.user_metadata?.name || user.email || "Usuario",
+        avatar: user.user_metadata?.avatar_url || "/default-avatar.png",
+        email: user.email || "",
+        totalChallengesAttempted: safeChallengeData.length,
         completedChallenges: completedChallenges.length,
+        completedLessons: completedLessons.length,
         totalPoints: totalPoints,
-        progressDetail: progressDetail
+        progressDetail: progressDetail,
       });
-
     } catch (error) {
-      console.error('Error inesperado:', error);
+      console.error("Error inesperado:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  // Función para manejar error de imagen (se mantiene)
+  // --- ⚠️ MANEJAR ERROR DE IMAGEN ---
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     const target = e.target as HTMLImageElement;
-    target.src = '/default-avatar.png';
+    target.src = "/default-avatar.png";
   };
 
-  // --- 📸 NUEVA FUNCIÓN PARA SUBIR EL AVATAR ---
+  // --- 📸 SUBIR O ACTUALIZAR AVATAR ---
   const uploadAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
-      try {
-          setUploading(true);
+    try {
+      setUploading(true);
 
-          const user = (await supabase.auth.getUser()).data.user;
+      const { data: { user } } = await supabase.auth.getUser();
 
-          if (!user) {
-              alert('Usuario no autenticado. Por favor, inicia sesión.');
-              return;
-          }
-
-          const file = event.target.files?.[0];
-          if (!file) {
-              throw new Error('Debes seleccionar una imagen para subir.');
-          }
-
-          const fileExt = file.name.split('.').pop();
-          const fileName = `${user.id}.${fileExt}`;
-          const filePath = `${fileName}`;
-
-          // 1. Subir/Sobrescribir archivo en el Bucket 'avatars' (Asegúrate de que este bucket exista)
-          const { error: uploadError } = await supabase.storage
-              .from('avatars') 
-              .upload(filePath, file, { 
-                  cacheControl: '3600',
-                  upsert: true 
-              });
-
-          if (uploadError) {
-              throw uploadError;
-          }
-
-          // 2. Obtener la URL pública (o firmada si no es pública)
-          const { data: { publicUrl } } = supabase.storage
-              .from('avatars')
-              .getPublicUrl(filePath);
-          
-          // 3. Actualizar la URL en los metadatos del usuario
-          const { error: updateError } = await supabase.auth.updateUser({
-              data: { avatar_url: publicUrl }
-          });
-
-          if (updateError) {
-              throw updateError;
-          }
-
-          // 4. Actualizar el estado local
-          setProfile(prev => ({
-              ...prev,
-              avatar: publicUrl,
-          }));
-
-      } catch (error) {
-          console.error('Error subiendo avatar:', error);
-          alert('Error al subir el avatar: ' + (error as Error).message);
-      } finally {
-          setUploading(false);
-          // Reinicia el valor del input para permitir la subida del mismo archivo otra vez
-          event.target.value = ''; 
+      if (!user) {
+        alert("Usuario no autenticado. Por favor, inicia sesión.");
+        return;
       }
+
+      const file = event.target.files?.[0];
+      if (!file) {
+        throw new Error("Debes seleccionar una imagen para subir.");
+      }
+
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${user.id}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      // 🔧 Evita caché del CDN y permite sobrescribir
+      const { error: uploadError } = await supabase.storage
+        .from("avatars")
+        .upload(filePath, file, {
+          cacheControl: "0",
+          upsert: true,
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from("avatars")
+        .getPublicUrl(filePath);
+
+      // 💡 Añadir timestamp para romper la caché del navegador
+      const updatedUrl = `${publicUrl}?t=${Date.now()}`;
+
+      const { error: updateError } = await supabase.auth.updateUser({
+        data: { avatar_url: updatedUrl },
+      });
+
+      if (updateError) throw updateError;
+
+      setProfile((prev) => ({
+        ...prev,
+        avatar: updatedUrl,
+      }));
+    } catch (error) {
+      console.error("Error subiendo avatar:", error);
+      alert("Error al subir el avatar: " + (error as Error).message);
+    } finally {
+      setUploading(false);
+      event.target.value = ""; // permite volver a subir la misma imagen
+    }
   };
 
   if (loading) return <div>Cargando perfil...</div>;
@@ -206,32 +250,36 @@ const ProfileView = () => {
   return (
     <div className="profile-container">
       <div className="profile-header">
-        {/* 📸 WRAPPER DEL AVATAR Y EDICIÓN */}
-        <div className="avatar-wrapper"> 
-            <img 
-                src={profile.avatar} 
-                alt="Avatar" 
-                className="avatar"
-                onError={handleImageError}
-            />
+        {/* --- 📸 SECCIÓN DE AVATAR --- */}
+        <div className="avatar-wrapper">
+          <img
+            src={profile.avatar}
+            alt="Avatar"
+            className="avatar"
+            onError={handleImageError}
+          />
 
-            {/* Input oculto para seleccionar el archivo */}
-            <input
-                style={{ visibility: 'hidden', position: 'absolute' }}
-                type="file"
-                id="avatar-upload"
-                accept="image/*"
-                onChange={uploadAvatar}
-                disabled={uploading}
-            />
+          {/* Input oculto */}
+          <input
+            style={{ visibility: "hidden", position: "absolute" }}
+            type="file"
+            id="avatar-upload"
+            accept="image/*"
+            onChange={uploadAvatar}
+            disabled={uploading}
+          />
 
-            {/* Botón/Label visible para disparar el click del input oculto */}
-            <label htmlFor="avatar-upload" className="edit-button" style={{ cursor: uploading ? 'default' : 'pointer' }}>
-                {uploading ? 'Subiendo...' : 'Editar'}
-            </label>
+          {/* Botón visible */}
+          <label
+            htmlFor="avatar-upload"
+            className="edit-button"
+            style={{ cursor: uploading ? "default" : "pointer" }}
+          >
+            {uploading ? "Subiendo..." : "Editar"}
+          </label>
         </div>
-        {/* FIN WRAPPER AVATAR */}
-        
+
+        {/* --- 👤 INFO DEL PERFIL --- */}
         <div className="profile-info">
           <h1>{profile.name}</h1>
           <p>{profile.email}</p>
@@ -242,53 +290,60 @@ const ProfileView = () => {
             </div>
             <div className="stat">
               <span className="stat-value">{profile.completedChallenges}</span>
-              <span className="stat-label">Completados</span>
+              <span className="stat-label">Challenges</span>
             </div>
             <div className="stat">
-              <span className="stat-value">{profile.totalChallengesAttempted}</span>
-              <span className="stat-label">Intentados</span>
+              <span className="stat-value">{profile.completedLessons}</span>
+              <span className="stat-label">Lecciones</span>
             </div>
           </div>
         </div>
       </div>
 
+      {/* --- 📊 PROGRESO DE CHALLENGES --- */}
       <div className="progress-section">
         <h2>Progreso de Challenges</h2>
-        
+
         <div className="progress-bar">
-          <div 
+          <div
             className="progress-fill"
             style={{
-              width: `${
-                profile.totalChallengesAttempted > 0 
-                  ? (profile.completedChallenges / profile.totalChallengesAttempted) * 100 
-                  : 0
-              }%`
+              width: `${profile.totalChallengesAttempted > 0
+                ? (profile.completedChallenges / profile.totalChallengesAttempted) * 100
+                : 0
+                }%`,
             }}
           ></div>
         </div>
-        
-        <p>{profile.completedChallenges} de {profile.totalChallengesAttempted} completados</p>
+
+        <p>
+          {profile.completedChallenges} de {profile.totalChallengesAttempted} challenges completados
+        </p>
 
         <div className="challenges-list">
-          <h3>Challenges Completados</h3>
+          <h3>Actividades Completadas</h3>
           {profile.progressDetail.length > 0 ? (
-            profile.progressDetail.map((challenge, index) => (
+            profile.progressDetail.map((activity, index) => (
               <div key={index} className="challenge-item">
                 <div className="challenge-info">
-                  <h4>{challenge.title}</h4>
-                  <span className={`difficulty ${challenge.difficulty.toLowerCase()}`}>
-                    {challenge.difficulty}
+                  <h4>{activity.title}</h4>
+                  <span
+                    className={`difficulty ${activity.difficulty ? activity.difficulty.toLowerCase() : 'lesson'}`}
+                  >
+                    {activity.type === 'challenge' ? activity.difficulty : 'Lección'}
                   </span>
                 </div>
                 <div className="challenge-stats">
-                  <span>Puntos: {challenge.score}/{challenge.points}</span>
-                  <span>Completado: {new Date(challenge.completedAt).toLocaleDateString()}</span>
+                  <span>Puntos: {activity.score}</span>
+                  <span>
+                    Completado:{" "}
+                    {new Date(activity.completedAt).toLocaleDateString()}
+                  </span>
                 </div>
               </div>
             ))
           ) : (
-            <p>No hay challenges completados aún.</p>
+            <p>No hay actividades completadas aún.</p>
           )}
         </div>
       </div>
