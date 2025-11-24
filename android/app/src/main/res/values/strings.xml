@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">codeseed</string>
+    <string name="title_activity_main">codeseed</string>
+    <string name="package_name">com.codeseed.app</string>
+    <string name="custom_url_scheme">com.codeseed.app</string>
+</resources>
