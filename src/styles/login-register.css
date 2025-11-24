@@ -1,3 +1,4 @@
+/* === LOGIN & REGISTER PAGE === */
 .auth-page {
   display: flex;
   justify-content: center;
@@ -7,7 +8,106 @@
   background: transparent;
   animation: fadeInUp 0.8s ease;
 }
+/* === CONTADORES DE CARACTERES === */
+.input-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
 
+.character-count {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.75em;
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(0, 0, 0, 0.3);
+  padding: 2px 8px;
+  border-radius: 12px;
+  pointer-events: none;
+  z-index: 2;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
+
+/* Asegurar que el input tenga padding extra a la derecha para el contador */
+.input-header input {
+  padding-right: 60px !important;
+  width: 100%;
+}
+
+/* === GRUPOS DE INPUT MEJORADOS === */
+.input-group {
+  position: relative;
+  margin-bottom: 8px;
+  
+}
+
+/* === MENSAJES DE ERROR DE CAMPO === */
+.field-error {
+  color: #ff6b6b;
+  font-size: 0.75em;
+  margin-top: 4px;
+  text-align: left;
+  display: block;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  padding-left: 4px;
+}
+
+/* === INPUT CON ERROR === */
+.error-input {
+  border-color: #ff6b6b !important;
+  background: rgba(255, 107, 107, 0.15) !important;
+  box-shadow: 0 0 15px rgba(255, 107, 107, 0.3) !important;
+}
+
+.error-input:focus {
+  border-color: #ff6b6b !important;
+  box-shadow: 0 0 15px rgba(255, 107, 107, 0.4) !important;
+}
+
+/* === BOTÓN DESHABILITADO === */
+.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: linear-gradient(90deg, #6c757d, #868e96) !important;
+}
+
+.auth-btn:disabled:hover {
+  transform: none !important;
+}
+
+/* === MEJORAS PARA LOS PLACEHOLDERS === */
+.register-form input::placeholder {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 0.9em;
+}
+
+/* === ESPACIADO CONSISTENTE === */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* === RESPONSIVE ADJUSTMENTS === */
+@media (max-width: 480px) {
+  .character-count {
+    font-size: 0.7em;
+    padding: 1px 6px;
+    right: 10px;
+  }
+  
+  .input-header input {
+    padding-right: 50px !important;
+  }
+}
+/* === TARJETA PRINCIPAL === */
 .auth-card {
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(14px);
@@ -26,7 +126,8 @@
   transform: none;
   box-shadow: 0 0 25px rgba(63, 81, 181, 0.25);
 }
-/* === AN TARJETA === */
+
+/* Animación del recuadro */
 @keyframes glowBox {
   0% {
     box-shadow: 0 0 25px rgba(63, 81, 181, 0.45), 0 0 40px rgba(0, 188, 212, 0.25);
@@ -38,6 +139,7 @@
     box-shadow: 0 0 35px rgba(63, 81, 181, 0.55), 0 0 50px rgba(0, 188, 212, 0.3);
   }
 }
+
 /* === LOGO === */
 .auth-logo {
   width: 150px;
@@ -46,12 +148,14 @@
   display: block;
   animation: fadeInUp 0.8s ease;
 }
+
 /* === TITULO === */
 .auth-title {
   color: #a3c9ff;
   margin-bottom: 20px;
   font-weight: 600;
 }
+
 /* === FORMULARIO === */
 .login-form,
 .register-form {
@@ -59,6 +163,7 @@
   flex-direction: column;
   gap: 14px;
 }
+
 /* === INPUTS === */
 .login-form input,
 .register-form input {
@@ -71,6 +176,7 @@
   font-size: 1em;
   transition: 0.3s;
 }
+
 .login-form input::placeholder,
 .register-form input::placeholder {
   color: rgba(255, 255, 255, 0.7);
@@ -81,6 +187,7 @@
   border-color: #82b1ff;
   box-shadow: 0 0 10px rgba(130, 177, 255, 0.3);
 }
+
 /* === BOTÓN === */
 .auth-btn {
   background: linear-gradient(90deg, #4a6cf7, #00bcd4);
@@ -96,6 +203,7 @@
 .auth-btn:hover {
   transform: scale(1.03);
 }
+
 /* === TEXTO DE ENLACE === */
 .register-text,
 .login-text {
@@ -115,6 +223,7 @@
 .login-text a:hover {
   color: #82b1ff;
 }
+
 /* === MENSAJE DE ERROR === */
 .error {
   color: #ef5350;

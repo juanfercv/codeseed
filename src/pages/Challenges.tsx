@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaSkull, FaStar, FaRocket } from "react-icons/fa";
+import { FaSkull, FaStar, FaRocket, FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../services/supabaseClient";
 
@@ -18,25 +18,24 @@ export default function Challenges() {
 
   useEffect(() => {
     const fetchChallenges = async () => {
-      // 👉 1. Obtener usuario logueado
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return;
 
-      // 👉 2. Obtener todos los challenges
       const { data: challengesData } = await supabase
         .from("challenges")
-        .select("*");
+        .select("*")
+        .order("id", { ascending: true });
 
       if (challengesData) setChallenges(challengesData as Challenge[]);
 
-      // 👉 3. Obtener progreso del usuario
       const { data: progressData } = await supabase
         .from("user_challenge_progress")
         .select("challenge_id")
         .eq("user_id", user.id)
         .eq("completed", true);
 
-      // 👉 4. Guardar solo los IDs completados
       if (progressData) {
         const completedIDs = progressData.map((p) => p.challenge_id);
         setCompleted(completedIDs);
@@ -46,7 +45,14 @@ export default function Challenges() {
     fetchChallenges();
   }, []);
 
-  const handleSelectChallenge = (id: string) => {
+  const handleSelectChallenge = (index: number, id: string) => {
+    const previousChallengeId = challenges[index - 1]?.id;
+
+    // Si NO es el primer reto y el anterior NO está completado → bloquear
+    if (index > 0 && !completed.includes(previousChallengeId)) {
+      return alert("Debes completar el reto anterior antes de avanzar.");
+    }
+
     navigate(`/app/challenges/${id}`);
   };
 
@@ -67,32 +73,43 @@ export default function Challenges() {
         Avanza nivel por nivel completando los retos y gana experiencia.
       </p>
 
-      <div className="d-flex flex-wrap justify-content-center align-items-center gap-4 challenge-path">
-        {challenges.map((ch, index) => (
-          <div
-            key={ch.id}
-            className={`challenge-node card-animated ${ch.difficulty.toLowerCase()} ${
-              completed.includes(ch.id) ? "completed" : ""
-            }`}
-            onClick={() => handleSelectChallenge(ch.id)}
-          >
-            {ch.difficulty === "Difícil" ? (
-              <FaSkull className="icon" />
-            ) : ch.difficulty === "Medio" ? (
-              <FaRocket className="icon" />
-            ) : (
-              <FaStar className="icon" />
-            )}
+      <div className="challenge-path">
+        {challenges.map((ch, index) => {
+          const isCompleted = completed.includes(ch.id);
+          const previousChallengeId = challenges[index - 1]?.id;
 
-            <h5 className="mt-2 mb-1">{ch.title}</h5>
-            <small>{ch.description}</small>
-            <span className="level-number">#{index + 1}</span>
+          const isLocked =
+            index > 0 && !completed.includes(previousChallengeId);
 
-            {completed.includes(ch.id) && (
-              <span className="completed-badge">✔ Completado</span>
-            )}
-          </div>
-        ))}
+          return (
+            <div
+              key={ch.id}
+              className={`challenge-node card-animated ${ch.difficulty.toLowerCase()} 
+                ${isCompleted ? "completed" : ""} 
+                ${isLocked ? "locked" : "unlocked"}`}
+              onClick={() => !isLocked && handleSelectChallenge(index, ch.id)}
+            >
+              {isLocked ? (
+                <FaLock className="icon lock-icon" />
+              ) : ch.difficulty === "Difícil" ? (
+                <FaSkull className="icon" />
+              ) : ch.difficulty === "Medio" ? (
+                <FaRocket className="icon" />
+              ) : (
+                <FaStar className="icon" />
+              )}
+
+              <h5>{ch.title}</h5>
+              <small>{ch.description}</small>
+
+              <span className="level-number">#{index + 1}</span>
+
+              {isCompleted && (
+                <span className="completed-badge">✔ Completado</span>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

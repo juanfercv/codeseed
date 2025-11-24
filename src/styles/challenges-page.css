@@ -8,6 +8,7 @@
   padding: 60px 0;
   margin: 0 auto;
 }
+
 /* Línea central del camino */
 .challenge-path::before {
   content: "";
@@ -20,6 +21,7 @@
   opacity: 0.35;
   z-index: 0;
 }
+
 /* === TÍTULO Y SUBTÍTULO DE RETOS === */
 .container h1 {
   color: #b3e5fc;
@@ -34,7 +36,8 @@
   font-size: 1em;
   margin-bottom: 30px;
 }
-/* === NODOS DE RETOS (mismo estilo que las lecciones) === */
+
+/* === NODOS DE RETOS === */
 .challenge-node {
   position: relative;
   z-index: 1;
@@ -57,7 +60,8 @@
   animation: popBounce 0.8s ease both;
   backdrop-filter: blur(12px);
 }
-/* Efecto de brillo lateral */
+
+/* Brillo lateral */
 .challenge-node::after {
   content: "";
   position: absolute;
@@ -73,27 +77,23 @@
 .challenge-node:hover::after {
   left: 130%;
 }
-/* Hover */
+
 .challenge-node:hover {
   transform: translateY(-10px) scale(1.05);
   box-shadow: 0 15px 35px rgba(130, 177, 255, 0.45);
 }
+
 /* Animación de brillo suave */
 @keyframes glassPulse {
-  0% {
-    box-shadow: 0 0 20px rgba(130, 177, 255, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(130, 177, 255, 0.4);
-  }
-  100% {
-    box-shadow: 0 0 20px rgba(130, 177, 255, 0.2);
-  }
+  0% { box-shadow: 0 0 20px rgba(130, 177, 255, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(130, 177, 255, 0.4); }
+  100% { box-shadow: 0 0 20px rgba(130, 177, 255, 0.2); }
 }
 
 .challenge-node {
   animation: popBounce 0.8s ease both, glassPulse 6s ease-in-out infinite;
 }
+
 /* Ícono */
 .challenge-node .icon {
   font-size: 2.5em;
@@ -101,6 +101,7 @@
   color: #90caf9;
   filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
 }
+
 /* Texto */
 .challenge-node h5 {
   font-size: 1.2em;
@@ -114,54 +115,60 @@
   color: #d0d0d0;
   line-height: 1.3;
 }
+
 /* Colores de dificultad */
 .challenge-node.fácil {
   border: 2px solid #4caf50;
   box-shadow: 0 0 15px rgba(76, 175, 80, 0.35);
 }
+
 .challenge-node.medio {
   border: 2px solid #ffb300;
   box-shadow: 0 0 15px rgba(255, 179, 0, 0.35);
 }
+
 .challenge-node.difícil {
   border: 2px solid #ef5350;
   box-shadow: 0 0 15px rgba(239, 83, 80, 0.35);
 }
+
 /* Zigzag */
 .challenge-node:nth-child(even) {
   align-self: flex-end;
   margin-right: 80px;
 }
+
 .challenge-node:nth-child(odd) {
   align-self: flex-start;
   margin-left: 80px;
 }
+
 /* Número del reto */
 .level-number {
   position: absolute;
-  bottom: 10px;
-  right: 12px;
-  font-size: 0.85em;
-  background: rgba(63, 81, 181, 0.85);
-  color: white;
+  top: 10px;
+  right: 10px;
+
+  background: linear-gradient(135deg, #4a6cf7, #00bcd4);
+  color: #fff;
+
   padding: 5px 10px;
+  font-size: 0.85rem;
+  font-weight: bold;
+
   border-radius: 12px;
-  font-weight: 600;
+  box-shadow: 0 0 10px rgba(0, 188, 212, 0.4);
+
+  z-index: 10;
 }
-/* Animación de entrada (misma que lessons) */
+
+/* Animación entrada */
 @keyframes popBounce {
-  0% {
-    opacity: 0;
-    transform: translateY(40px) scale(0.9);
-  }
-  70% {
-    opacity: 1;
-    transform: translateY(-10px) scale(1.05);
-  }
-  100% {
-    transform: translateY(0) scale(1);
-  }
+  0% { opacity: 0; transform: translateY(40px) scale(0.9); }
+  70% { opacity: 1; transform: translateY(-10px) scale(1.05); }
+  100% { transform: translateY(0) scale(1); }
 }
+
 /* === RESPONSIVE === */
 @media (max-width: 768px) {
   .challenge-path {
@@ -192,3 +199,71 @@
   }
 }
 
+/* === 🔒 BLOQUEADO PERO CONSERVANDO COLOR === */
+.challenge-node.locked {
+  filter: grayscale(0.4) brightness(0.75);
+  cursor: not-allowed;
+  position: relative;
+  opacity: 0.85;
+}
+
+/* Mantener color según dificultad */
+.challenge-node.locked.fácil {
+  border-color: #4caf50;
+  box-shadow: 0 0 12px rgba(76, 175, 80, 0.25);
+}
+
+.challenge-node.locked.medio {
+  border-color: #ffb300;
+  box-shadow: 0 0 12px rgba(255, 179, 0, 0.25);
+}
+
+.challenge-node.locked.difícil {
+  border-color: #ef5350;
+  box-shadow: 0 0 12px rgba(239, 83, 80, 0.25);
+}
+
+/* Icono candado */
+.lock-icon {
+  color: #ffeb3b;
+  font-size: 2.7em !important;
+  animation: lockPulse 2s infinite ease-in-out;
+}
+
+@keyframes lockPulse {
+  0% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.7; }
+}
+
+/* Etiqueta bloqueado */
+.challenge-node.locked::before {
+  content: "Bloqueado";
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 4px 10px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.75em;
+  backdrop-filter: blur(4px);
+}
+
+/* === DESBLOQUEO ANIMADO === */
+.unlocked:not(.completed) {
+  animation: unlockMagic 1.2s ease-out;
+}
+
+@keyframes unlockMagic {
+  0% { box-shadow: 0 0 0px rgba(0, 255, 255, 0); transform: scale(0.95); }
+  50% { box-shadow: 0 0 35px rgba(0, 204, 255, 0.9); transform: scale(1.05); }
+  100% { box-shadow: 0 0 15px rgba(0, 204, 255, 0.4); transform: scale(1); }
+}
+
+/* === COMPLETADO === */
+.completed {
+  border: 2px solid #00e676 !important;
+  box-shadow: 0 0 25px rgba(0, 230, 118, 0.7) !important;
+  position: relative;
+}

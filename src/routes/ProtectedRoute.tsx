@@ -36,5 +36,5 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   if (loading) return <p>Cargando...</p>;
 
   // ✅ 4. Si no hay sesión → redirige al login
-  return session ? <>{children}</> : <Navigate to="/" replace />;
+  return session ? <>{children}</> : <Navigate to="/login" replace />;
 }

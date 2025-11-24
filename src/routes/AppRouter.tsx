@@ -8,13 +8,15 @@ import ChallengeEditor from "../pages/ChallengeEditor"; // ✅ nuevo editor
 import ProgressTree from "../pages/Perfil";
 import MainLayout from "../layouts/MainLayout";
 import ProtectedRoute from "./ProtectedRoute";
+import Inicio from "../pages/inicio";
 
 export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
         {/* 🌐 Rutas públicas */}
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Inicio />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
         {/* 🔒 Área protegida */}
