@@ -1,0 +1,188 @@
+/* Título principal */
+.lesson-detail h2 {
+  color: #90caf9;
+  font-size: 1.8em;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+  text-shadow: 0 0 12px rgba(130, 177, 255, 0.5);
+}
+/* Contenido de la lección */
+.lesson-content {
+  color: #d0d0d0;
+  font-size: 1.05em;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: inset 0 0 20px rgba(130, 177, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+/* Título del cuestionario */
+.lesson-detail h3 {
+  color: #b3e5fc;
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  text-shadow: 0 0 10px rgba(130, 177, 255, 0.4);
+}
+/* Estado de guardado y puntaje final */
+.lesson-detail p {
+  text-align: center;
+  font-size: 1em;
+  margin-top: 1rem;
+}
+
+.lesson-detail p[style*="color: #4CAF50"] {
+  color: #81c784 !important;
+  text-shadow: 0 0 10px rgba(129, 199, 132, 0.4);
+}
+/* === QUIZ (diseño complementario) === */
+.quiz-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 25px rgba(63, 81, 181, 0.25);
+  animation: fadeInUp 0.8s ease;
+}
+
+.quiz-question {
+  font-weight: 600;
+  color: #b3e5fc;
+  margin-bottom: 0.8rem;
+}
+
+.quiz-option {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(130, 177, 255, 0.25);
+  border-radius: 10px;
+  padding: 10px;
+  color: #e3f2fd;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.quiz-option:hover {
+  background: rgba(130, 177, 255, 0.25);
+  transform: scale(1.02);
+}
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .lesson-detail {
+    width: 95%;
+    padding: 1.5rem;
+  }
+
+  .lesson-detail h2 {
+    font-size: 1.5em;
+  }
+
+  .lesson-content {
+    font-size: 0.95em;
+    padding: 1rem;
+  }
+
+  .quiz-container {
+    padding: 1rem;
+  }
+
+  .quiz-option {
+    font-size: 0.9em;
+  }
+}
+/* === BOTÓN VOLVER A LECCIONES === */
+.btn-back-lessons {
+  display: inline-block;
+  margin: 2rem auto 0 auto;
+  background: linear-gradient(90deg, #4a6cf7, #00bcd4);
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  color: white;
+  font-weight: 600;
+  font-size: 1em;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px rgba(63, 81, 181, 0.4);
+  animation: glowBox 4s ease-in-out infinite alternate;
+}
+
+.btn-back-lessons:hover {
+  transform: scale(1.07);
+  box-shadow: 0 0 30px rgba(0, 188, 212, 0.6);
+}
+/* === OPCIONES DEL QUIZ (BOTONES MEJORADOS) === */
+.option-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(130, 177, 255, 0.25);
+  border-radius: 14px;
+  padding: 14px 18px;
+  color: #e3f2fd;
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+/* 💫 Efecto de brillo al pasar */
+.option-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120px;
+  width: 80px;
+  height: 100%;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.35), transparent);
+  transform: skewX(-25deg);
+  transition: left 0.6s ease;
+}
+
+.option-btn:hover::after {
+  left: 130%;
+}
+
+.option-btn:hover {
+  background: rgba(130, 177, 255, 0.18);
+  transform: scale(1.03);
+  box-shadow: 0 0 18px rgba(130, 177, 255, 0.3);
+}
+/* 🎯 Estado seleccionado */
+.option-btn.selected {
+  background: rgba(76, 175, 80, 0.25);
+  border-color: #4caf50;
+  box-shadow: 0 0 18px rgba(76, 175, 80, 0.4);
+  transform: scale(1.04);
+}
+/* ❌ Estado incorrecto */
+.option-btn.wrong {
+  background: rgba(239, 83, 80, 0.25);
+  border-color: #ef5350;
+  box-shadow: 0 0 18px rgba(239, 83, 80, 0.4);
+  transform: scale(1.04);
+}
+
+/* ✅ Estado correcto */
+.option-btn.correct {
+  background: rgba(56, 142, 60, 0.3);
+  border-color: #43a047;
+  box-shadow: 0 0 20px rgba(76, 175, 80, 0.45);
+  transform: scale(1.04);
+}
+/* === GRID DE OPCIONES === */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}

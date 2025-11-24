@@ -1,0 +1,219 @@
+/* === LECCIONES (NEUTRAS Y ANIMADAS) === */
+.lessons-container {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 2rem;
+  margin: 2rem auto;
+  width: 90%;
+  max-width: 1100px;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  animation: fadeInUp 1s ease;
+}
+/* === EFECTO DE BRILLO PARA EL CONTENEDOR DE LECCIONES === */
+.lessons-container {
+  position: relative;
+  animation: fadeInUp 1s ease, glowBox 4s ease-in-out infinite alternate;
+  box-shadow: 0 0 30px rgba(63, 81, 181, 0.35);
+}
+/* Efecto de brillo animado (como login) */
+@keyframes glowBox {
+  0% {
+    box-shadow: 0 0 25px rgba(63, 81, 181, 0.45),
+      0 0 40px rgba(0, 188, 212, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 50px rgba(63, 81, 181, 0.65),
+      0 0 70px rgba(0, 188, 212, 0.35);
+  }
+  100% {
+    box-shadow: 0 0 35px rgba(63, 81, 181, 0.55),
+      0 0 50px rgba(0, 188, 212, 0.3);
+  }
+}
+
+.lessons-title {
+  color: #90caf9;
+  font-weight: 700;
+  font-size: 1.8em;
+  margin-bottom: 10px;
+  text-shadow: 0 0 12px rgba(130, 177, 255, 0.4);
+}
+
+.lessons-subtitle {
+  color: #cfd8dc;
+  font-size: 1em;
+  margin-bottom: 30px;
+}
+
+.lessons-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 60px;
+  position: relative;
+}
+/* === Tarjetas de lecciones (neutral) === */
+.lesson-card {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  border: 1px solid rgba(130, 177, 255, 0.25);
+  box-shadow: 0 8px 25px rgba(63, 81, 181, 0.25);
+  cursor: pointer;
+  transition: all 0.35s ease;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 16px;
+  text-align: center;
+  animation: popBounce 0.8s ease both;
+}
+/* Efecto de brillo al pasar */
+.lesson-card:hover {
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 15px 35px rgba(130, 177, 255, 0.45);
+}
+
+.lesson-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100px;
+  width: 80px;
+  height: 100%;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.3), transparent);
+  transform: skewX(-25deg);
+  transition: left 0.6s ease;
+}
+
+.lesson-card:hover::after {
+  left: 130%;
+}
+/* === Ícono o imagen === */
+.lesson-icon {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+  color: #90caf9;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
+}
+/* === Texto === */
+.lesson-card h3 {
+  font-size: 1.2em;
+  font-weight: 700;
+  color: #b3e5fc;
+  margin-bottom: 8px;
+}
+
+.lesson-card p {
+  font-size: 0.9em;
+  color: #d0d0d0;
+  line-height: 1.3;
+}
+/* Animación entrada */
+@keyframes popBounce {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.9);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(-10px) scale(1.05);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+/* === RESPONSIVE === */
+@media (max-width: 1024px) {
+  .lessons-grid {
+    gap: 30px;
+  }
+  .lesson-card {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .auth-card {
+    width: 85%;
+    padding: 30px 20px;
+  }
+
+  .auth-logo {
+    width: 120px;
+  }
+
+  .lessons-container {
+    width: 95%;
+    padding: 1.5rem;
+  }
+
+  .lessons-title {
+    font-size: 1.5em;
+  }
+
+  .lessons-subtitle {
+    font-size: 0.9em;
+  }
+
+  .lessons-grid {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .lesson-card {
+    width: 90%;
+    max-width: 300px;
+    height: auto;
+    padding: 20px;
+  }
+
+  .lesson-icon {
+    font-size: 2em;
+    margin-bottom: 8px;
+  }
+
+  .lesson-card h3 {
+    font-size: 1.1em;
+  }
+
+  .lesson-card p {
+    font-size: 0.85em;
+    line-height: 1.4;
+  }
+}
+
+@media (max-width: 480px) {
+  .lessons-container {
+    padding: 1rem;
+  }
+
+  .lessons-title {
+    font-size: 1.3em;
+  }
+
+  .lesson-card {
+    width: 100%;
+    max-width: 280px;
+    padding: 16px;
+  }
+
+  .lesson-icon {
+    font-size: 1.8em;
+  }
+
+  .lesson-card p {
+    font-size: 0.8em;
+  }
+}

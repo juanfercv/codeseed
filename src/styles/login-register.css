@@ -1,0 +1,124 @@
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background: transparent;
+  animation: fadeInUp 0.8s ease;
+}
+
+.auth-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 40px 30px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 0 25px rgba(63, 81, 181, 0.25);
+  text-align: center;
+  animation: glowBox 4s ease-in-out infinite alternate;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-card:hover {
+  transform: none;
+  box-shadow: 0 0 25px rgba(63, 81, 181, 0.25);
+}
+/* === AN TARJETA === */
+@keyframes glowBox {
+  0% {
+    box-shadow: 0 0 25px rgba(63, 81, 181, 0.45), 0 0 40px rgba(0, 188, 212, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 50px rgba(63, 81, 181, 0.65), 0 0 70px rgba(0, 188, 212, 0.35);
+  }
+  100% {
+    box-shadow: 0 0 35px rgba(63, 81, 181, 0.55), 0 0 50px rgba(0, 188, 212, 0.3);
+  }
+}
+/* === LOGO === */
+.auth-logo {
+  width: 150px;
+  height: auto;
+  margin: 0 auto 20px auto;
+  display: block;
+  animation: fadeInUp 0.8s ease;
+}
+/* === TITULO === */
+.auth-title {
+  color: #a3c9ff;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+/* === FORMULARIO === */
+.login-form,
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+/* === INPUTS === */
+.login-form input,
+.register-form input {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  outline: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 1em;
+  transition: 0.3s;
+}
+.login-form input::placeholder,
+.register-form input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.login-form input:focus,
+.register-form input:focus {
+  border-color: #82b1ff;
+  box-shadow: 0 0 10px rgba(130, 177, 255, 0.3);
+}
+/* === BOTÓN === */
+.auth-btn {
+  background: linear-gradient(90deg, #4a6cf7, #00bcd4);
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  color: white;
+  font-weight: 600;
+  margin-top: 10px;
+  transition: transform 0.2s ease;
+}
+
+.auth-btn:hover {
+  transform: scale(1.03);
+}
+/* === TEXTO DE ENLACE === */
+.register-text,
+.login-text {
+  margin-top: 15px;
+  font-size: 0.9em;
+  color: #b0bec5;
+}
+
+.register-text a,
+.login-text a {
+  color: #64b5f6;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.register-text a:hover,
+.login-text a:hover {
+  color: #82b1ff;
+}
+/* === MENSAJE DE ERROR === */
+.error {
+  color: #ef5350;
+  margin-top: 10px;
+  font-size: 0.9em;
+  font-weight: 500;
+}
